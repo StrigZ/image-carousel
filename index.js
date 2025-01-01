@@ -12,6 +12,7 @@ const nextImageBtn = document.querySelector("#next-image");
 const previousImageBtn = document.querySelector("#previous-image");
 
 let currentImageIndex = 0;
+let isUserActive = false;
 
 const showNextImage = () => {
   if (currentImageIndex >= IMAGES.length - 1) {
@@ -34,12 +35,17 @@ const updatePagination = () => {
   resetPagination();
   highlightCurrentPagination();
 };
-
+const updateActivityStatus = () => {
+  isUserActive = true;
+  setTimeout(() => (isUserActive = false), 1000);
+};
 nextImageBtn.addEventListener("click", () => {
+  updateActivityStatus();
   showNextImage();
   updatePagination();
 });
 previousImageBtn.addEventListener("click", () => {
+  updateActivityStatus();
   showPreviousImage();
   updatePagination();
 });
@@ -81,7 +87,7 @@ paginationContainer.addEventListener("click", ({ target }) => {
   if (target.tagName !== "I") {
     return;
   }
-
+  updateActivityStatus();
   resetPagination();
   fillPaginationIcon(target);
   const paginationIndex = Array.from(paginationContainer.children).indexOf(
@@ -93,6 +99,8 @@ paginationContainer.addEventListener("click", ({ target }) => {
 
 const slideshow = (() => {
   setInterval(() => {
-    showNextImage();
+    if (!isUserActive) {
+      showNextImage();
+    }
   }, 5000);
 })();
