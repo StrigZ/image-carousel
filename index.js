@@ -91,3 +91,9 @@ paginationContainer.addEventListener("click", ({ target }) => {
   currentImageIndex = paginationIndex;
   activeImage.src = IMAGES[paginationIndex];
 });
+
+const slideshow = (() => {
+  setInterval(() => {
+    activeImage.src = getNextImageSrc();
+  }, 5000);
+})();
