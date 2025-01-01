@@ -5,24 +5,29 @@ const IMAGES = [
   "https://img.freepik.com/free-photo/cute-cat-spending-time-indoors_23-2150649172.jpg?t=st=1735582472~exp=1735586072~hmac=af1698968a24be818740053541860c70b89def629da81b57e3669af2ba15f722&w=1380",
   "https://img.freepik.com/free-photo/closeup-shot-ginger-kitten-with-green-eyes-white-background_181624-29784.jpg?t=st=1735582496~exp=1735586096~hmac=4ae19d28985aacf038bd40139c34a5723450678622337d51c84f800dd2af1459&w=1380",
 ];
+const activeImageContainer = document.querySelector("#active-image-container");
+const activeImage = document.querySelector("#active-image-container > img");
+const paginationContainer = document.querySelector("#pagination");
+const nextImageBtn = document.querySelector("#next-image");
+const previousImageBtn = document.querySelector("#previous-image");
 
 let currentImageIndex = 0;
 
-const getNextImageSrc = () => {
+const showNextImage = () => {
   if (currentImageIndex >= IMAGES.length - 1) {
     currentImageIndex = 0;
   } else {
     currentImageIndex++;
   }
-  return IMAGES[currentImageIndex];
+  activeImage.src = IMAGES[currentImageIndex];
 };
-const getPreviousImageSrc = () => {
+const showPreviousImage = () => {
   if (currentImageIndex <= 0) {
     currentImageIndex = IMAGES.length - 1;
   } else {
     currentImageIndex--;
   }
-  return IMAGES[currentImageIndex];
+  activeImage.src = IMAGES[currentImageIndex];
 };
 
 const updatePagination = () => {
@@ -30,18 +35,12 @@ const updatePagination = () => {
   highlightCurrentPagination();
 };
 
-const activeImageContainer = document.querySelector("#active-image-container");
-const activeImage = document.querySelector("#active-image-container > img");
-const paginationContainer = document.querySelector("#pagination");
-const nextImageBtn = document.querySelector("#next-image");
-const previousImageBtn = document.querySelector("#previous-image");
-
 nextImageBtn.addEventListener("click", () => {
-  activeImage.src = getNextImageSrc();
+  showNextImage();
   updatePagination();
 });
 previousImageBtn.addEventListener("click", () => {
-  activeImage.src = getPreviousImageSrc();
+  showPreviousImage();
   updatePagination();
 });
 
@@ -66,7 +65,7 @@ const resetPagination = () => {
     button.firstChild.classList.add("fa-regular");
   });
 };
-const highlightPagination = (icon) => {
+const fillPaginationIcon = (icon) => {
   icon.classList.remove("fa-regular");
   icon.classList.add("fa-solid");
 };
@@ -75,7 +74,7 @@ const highlightCurrentPagination = () => {
   const paginationButtonsArray = Array.from(paginationContainer.children);
   const buttonToHighlight = paginationButtonsArray[currentImageIndex];
   const buttonIcon = buttonToHighlight.firstChild;
-  highlightPagination(buttonIcon);
+  fillPaginationIcon(buttonIcon);
 };
 
 paginationContainer.addEventListener("click", ({ target }) => {
@@ -84,7 +83,7 @@ paginationContainer.addEventListener("click", ({ target }) => {
   }
 
   resetPagination();
-  highlightPagination(target);
+  fillPaginationIcon(target);
   const paginationIndex = Array.from(paginationContainer.children).indexOf(
     target.parentNode
   );
@@ -94,6 +93,6 @@ paginationContainer.addEventListener("click", ({ target }) => {
 
 const slideshow = (() => {
   setInterval(() => {
-    activeImage.src = getNextImageSrc();
+    showNextImage();
   }, 5000);
 })();
